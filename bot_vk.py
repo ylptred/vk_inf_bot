@@ -153,7 +153,7 @@ while True:
                             Спасибо)
                             
                             Создатель: @ylptred
-                            Мой GitHub: https://github.com/ylptred''',
+                            Код: https://github.com/ylptred/vk_inf_bot''',
                     keyboard=open('all_on.json', 'r', encoding="UTF-8").read()
                 )
 
