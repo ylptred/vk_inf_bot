@@ -4,10 +4,10 @@ from vk_api.longpoll import VkLongPoll
 from vk_api.longpoll import VkEventType
 import sqlite3
 
-conn = sqlite3.connect("db.db")
+conn = sqlite3.connect("db.db") #подключаем базу данных
 c = conn.cursor()
 
-vk_session = vk_api.VkApi(token='token')
+vk_session = vk_api.VkApi(token='token') 
 
 longpoll = VkLongPoll(vk_session)
 
@@ -22,7 +22,7 @@ def random_id():
     return Random
 
 
-def check_if_exists(user_id):
+def check_if_exists(user_id): #проверяем существует ли такой юзер в базе данных или нет
     c.execute("SELECT * FROM users WHERE user_id=%d" % user_id)
     result = c.fetchone()
     if result is None:
@@ -30,36 +30,36 @@ def check_if_exists(user_id):
     return True
 
 
-def register_new_user(user_id):
+def register_new_user(user_id): #"регистрируем" нового пользователя
     c.execute("INSERT INTO users(user_id, state) VALUES (%d, '')" % user_id)
     conn.commit()
-    c.execute("INSERT INTO user_info(user_id, user_wish, user_image) VALUES (%d, 0, '')" % user_id)
+    c.execute("INSERT INTO user_info(user_id, user_wish, user_image) VALUES (%d, 0, '')" % user_id) 
     conn.commit()
 
 
-def get_user_existance(user_id):
+def get_user_existance(user_id): #возвращает 1, если юзер уже отправил нужные данные, 0 - если он не отправил нужные данные
     c.execute("SELECT user_wish FROM user_info WHERE user_id=%d" % user_id)
     result = c.fetchone()
     return result[0]
 
 
-def get_user_state(user_id):
+def get_user_state(user_id): #возвращает значение колонки state для конкретного юзера
     c.execute("SELECT state FROM users WHERE user_id = {}".format(event.user_id))
     result = c.fetchone()
     return result[0]
 
 
-def set_user_existance(user_id, user_wish):
-    c.execute("UPDATE user_info SET user_wish=%d WHERE user_id=%d" % (user_wish, user_id))
+def set_user_existance(user_id, user_exist): #заносит значение в колонку user_exist: 0 или 1
+    c.execute("UPDATE user_info SET user_wish=%d WHERE user_id=%d" % (user_exist, user_id))
     conn.commit()
 
 
-def set_user_state(user_id, state):
+def set_user_state(user_id, state): #заносит значение в колонку state
     c.execute("UPDATE users SET state='{}' WHERE user_id={}".format(state, user_id))
     conn.commit()
 
 
-def change():
+def change(): #изменяем отправленный список
     while True:
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
@@ -83,11 +83,11 @@ def change():
                     return
 
 
-def add():
+def add(): #добавляем в список новые треки
     while True:
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                print(event.user_id, ' ', 'Написал сообщение длиной ', len(event.text), ' ', event.text)
+                print(event.user_id, ' ', 'Написал сообщение длиной ', len(event.text), ' ', 'message: ', event.text)
                 if event.text.count('-') >= 1 or event.text.count('–') >= 1:
                     var = get_user_state(event.user_id) + '\n' + event.text
                     set_user_state(event.user_id, var)
@@ -109,11 +109,11 @@ def add():
                     return
 
 
-print('Я живой!')
+print('Я живой!') #проверяем работает ли бот :)))
 while True:
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            print(event.user_id, ' ', 'Написал сообщение длиной ', len(event.text), ' ', event.text)
+            print(event.user_id, ' ', 'Написал сообщение длиной ', len(event.text), ' ', 'message: ', event.text) #выводим некоторую                                                                                            инфу о юзере и сообщении, которое он отправил
 
             if not check_if_exists(event.user_id):
                 register_new_user(event.user_id)
