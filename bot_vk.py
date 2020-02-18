@@ -4,7 +4,7 @@ from vk_api.longpoll import VkLongPoll
 from vk_api.longpoll import VkEventType
 import sqlite3
 
-conn = sqlite3.connect("db.db") #подключаем базу данных
+conn = sqlite3.connect("db.db") #подключаем базу данных SQL
 c = conn.cursor()
 
 vk_session = vk_api.VkApi(token='token') 
