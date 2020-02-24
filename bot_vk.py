@@ -21,6 +21,12 @@ def random_id():
     Random += random.randint(0, 100000000)
     return Random
 
+with open('all_on.json', 'r', encoding="UTF-8").read() as file: #открываем жсон файл и записываем его в переменную
+    all_on_keyboard = file.read()
+with open('no_extra.json', 'r', encoding="UTF-8").read() as file:
+    no_extra_keyboard = file.read()
+with open('no_change.json', 'r', encoding="UTF-8").read() as file:
+    no_change_keyboard = file.read()
 
 def check_if_exists(user_id): #проверяем существует ли такой юзер в базе данных или нет
     c.execute("SELECT * FROM users WHERE user_id=%d" % user_id)
@@ -70,7 +76,7 @@ def change(): #изменяем отправленный список
                         user_id=event.user_id,
                         random_id=random_id(),
                         message='Спасибо, вы успешно заменили треки',
-                        keyboard=open('all_on.json', 'r', encoding="UTF-8").read()
+                        keyboard=all_on_keyboard
                     )
                     return
                 elif event.text.lower() == 'не редактировать список':
@@ -78,7 +84,7 @@ def change(): #изменяем отправленный список
                         user_id=event.user_id,
                         random_id=random_id(),
                         message='Ок',
-                        keyboard=open('all_on.json', 'r', encoding="UTF-8").read()
+                        keyboard=all_on_keyboard
                     )
                     return
 
@@ -96,7 +102,7 @@ def add(): #добавляем в список новые треки
                         user_id=event.user_id,
                         random_id=random_id(),
                         message='Спасибо, вы успешно дополнили свой список',
-                        keyboard=open('all_on.json', 'r', encoding="UTF-8").read()
+                        keyboard=all_on_keyboard
                     )
                     return
                 elif event.text.lower() == 'не дополнять список':
@@ -104,7 +110,7 @@ def add(): #добавляем в список новые треки
                         user_id=event.user_id,
                         random_id=random_id(),
                         message='Ок',
-                        keyboard=open('all_on.json', 'r', encoding="UTF-8").read()
+                        keyboard=all_on_keyboard
                     )
                     return
 
@@ -123,7 +129,7 @@ while True:
                     user_id=event.user_id,
                     random_id=random_id(),
                     message='Отправьте, пожалуйста, новый список в нужном формате',
-                    keyboard=open('no_change.json', 'r', encoding="UTF-8").read()
+                    keyboard=no_change_keyboard
                 )
                 change()
             elif event.text.lower() == 'отредактировать список' and get_user_existance(event.user_id) == 0:
@@ -131,14 +137,14 @@ while True:
                     user_id=event.user_id,
                     random_id=random_id(),
                     message='Вообще-то Вы не отправили еще ни одного трека',
-                    keyboard=open('all_on.json', 'r', encoding="UTF-8").read()
+                    keyboard=all_on_keyboard
                 )
             elif event.text.lower() == 'дополнить список':
                 vk.messages.send(
                     user_id=event.user_id,
                     random_id=random_id(),
                     message='Отправьте, пожалуйста, трек, который я должен добавить',
-                    keyboard=open('no_extra.json', 'r', encoding="UTF-8").read()
+                    keyboard=no_extra_keyboard
                 )
                 add()
             elif event.text.lower() == 'помощь':
@@ -156,7 +162,7 @@ while True:
 Создатель: @ylptred
 Код: https://github.com/ylptred/vk_inf_bot
                             ''',
-                    keyboard=open('all_on.json', 'r', encoding="UTF-8").read()
+                    keyboard=all_on_keyboard
                 )
 
             elif event.text.count('-') >= 1 or event.text.count('–') >= 1:
@@ -168,7 +174,7 @@ while True:
                         user_id=event.user_id,
                         random_id=random_id(),
                         message='Спасибо! Ваши треки приняты)',
-                        keyboard=open('all_on.json', 'r', encoding="UTF-8").read()
+                        keyboard=all_on_keyboard
                     )
 
             else:
@@ -176,5 +182,5 @@ while True:
                     user_id=event.user_id,
                     random_id=random_id(),
                     message='Перечитайте, пожалуйста, правила)',
-                    keyboard=open('all_on.json', 'r', encoding="UTF-8").read()
+                    keyboard=all_on_keyboard
                 )
